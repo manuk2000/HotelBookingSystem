@@ -1,10 +1,11 @@
 package org.example.history;
 
+import java.io.Serializable;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class StartEndDate {
+public class StartEndDate implements Serializable {
     private LocalDate startDataTime;
     private LocalDate endDataTime;
 
@@ -13,9 +14,9 @@ public class StartEndDate {
         this.endDataTime = endDataTime;
     }
 
-    static public StartEndDate createDataTime(LocalDate endDataTime , LocalDate startDataTime) throws DateTimeException {
+    static public StartEndDate createDataTime(LocalDate endDataTime, LocalDate startDataTime) throws DateTimeException {
         if (validDataTime(endDataTime) && validDataTime(startDataTime)) {
-            return new StartEndDate(endDataTime , startDataTime);
+            return new StartEndDate(endDataTime, startDataTime);
         } else {
             throw new DateTimeException("Input date time Before Local Date Time now");
         }
@@ -30,7 +31,7 @@ public class StartEndDate {
     }
 
     static private boolean validDataTime(LocalDate dateTime) {
-        return ! dateTime.isBefore(LocalDate.now());
+        return !dateTime.isBefore(LocalDate.now());
     }
 
     @Override
@@ -44,5 +45,13 @@ public class StartEndDate {
     @Override
     public int hashCode() {
         return Objects.hash(startDataTime, endDataTime);
+    }
+
+    @Override
+    public String toString() {
+        return "StartEndDate{" +
+                "startDataTime=" + startDataTime +
+                ", endDataTime=" + endDataTime +
+                '}';
     }
 }

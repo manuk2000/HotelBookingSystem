@@ -1,6 +1,8 @@
 package org.example.room;
 
-public enum TypeRoom {
+import java.io.Serializable;
+
+public enum TypeRoom implements Serializable {
     SINGLE_ROOM, DOUBLE_ROOM, DELUXE_ROOM;
 
 }

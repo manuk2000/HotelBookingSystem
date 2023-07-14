@@ -1,6 +1,8 @@
 package org.example.roomProperty;
 
-public class RoomProperty implements IRoomProperty {
+import java.io.Serializable;
+
+public class RoomProperty implements Serializable, IRoomProperty {
     private int quantity;
     private String name;
 

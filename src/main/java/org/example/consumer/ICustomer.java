@@ -1,6 +1,8 @@
 package org.example.consumer;
 
-public interface ICustomer {
+import java.io.Serializable;
+
+public interface ICustomer extends Serializable {
     String getName();
 
     void setName(String name);
@@ -9,5 +11,4 @@ public interface ICustomer {
 
     void setEmail(String email);
 
-    ConsumerType getConsumerType();
 }

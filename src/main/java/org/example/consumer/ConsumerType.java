@@ -1,5 +1,7 @@
 package org.example.consumer;
 
-public enum ConsumerType {
-    SIMPLE,ADMIN;
+import java.io.Serializable;
+
+public enum ConsumerType implements Serializable {
+    SIMPLE, ADMIN;
 }

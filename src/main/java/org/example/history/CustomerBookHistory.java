@@ -3,12 +3,13 @@ package org.example.history;
 import org.example.consumer.ICustomer;
 import org.example.room.IRoom;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class CustomerBookHistory {
+public class CustomerBookHistory implements Serializable {
     private ICustomer consumer;
     private Map<IRoom, Set<StartEndDate>> history;
 
@@ -26,12 +27,11 @@ public class CustomerBookHistory {
     }
 
     public boolean addBookToHistory(IRoom room, StartEndDate period) {
-        if (! history.containsKey(room)) {
-            history.put(room , new HashSet<>());
+        if (!history.containsKey(room)) {
+            history.put(room, new HashSet<>());
         }
         Set<StartEndDate> set = history.get(room);
         if (set.add(period)) {
-            System.out.println("Time fixed");
             return true;
         }
         System.out.println("Artie's busy this Data");

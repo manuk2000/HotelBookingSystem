@@ -5,14 +5,19 @@ import org.example.history.CustomerBookHistory;
 import org.example.history.RoomBookHistory;
 import org.example.history.StartEndDate;
 import org.example.room.IRoom;
+import org.example.room.Room;
 import org.example.room.TypeRoom;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 
-public class Hotel {
+import java.util.InputMismatchException;
+
+public class Hotel implements Serializable {
     private List<RoomBookHistory> roomsAndReservesHistory;
     private List<CustomerBookHistory> cutomerAndReservesHistory;
 
@@ -63,6 +68,59 @@ public class Hotel {
         return first;
     }
 
+    public ICustomer findCustomer(String email) {
+        for (CustomerBookHistory customerHistory : cutomerAndReservesHistory) {
+            if (customerHistory.getConsumer().getEmail().equals(email)) {
+                return customerHistory.getConsumer();
+            }
+        }
+        return null;
+    }
+
+    public void generateReport() {
+        Scanner scanner = new Scanner(System.in);
+        int roomNumber = inputRoomNumber(scanner);
+        String context = report(roomNumber);
+        System.out.print("Enter file name to save the report: ");
+        scanner.nextLine();
+        String fileName = scanner.nextLine();
+        fileName += ".txt";
+        System.out.println(context);
+        try (Writer writer = new FileWriter(fileName)) {
+            writer.write(context);
+            System.out.println("Report generated successfully.");
+        } catch (IOException e) {
+            System.out.println("Failed to generate report.");
+        }
+    }
+
+    private String report(int roomNumber) {
+        String context = " ";
+        for (CustomerBookHistory customerHistory : cutomerAndReservesHistory) {
+            for (IRoom room : customerHistory.getHistory().keySet()) {
+                if (room.getNumberRoom() == roomNumber) {
+                    context = "Customer name " + customerHistory.getConsumer().getName() + " "
+                            + ":Room number " + roomNumber + " " + customerHistory.getHistory().get(room).toString() + "\n";
+                }
+            }
+        }
+        return context;
+    }
+
+    private int inputRoomNumber(Scanner scanner) {
+        int roomNumber;
+        while (true) {
+            try {
+                System.out.print("Enter room number: ");
+                roomNumber = scanner.nextInt();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter an integer.");
+            }
+        }
+        return roomNumber;
+    }
+
     private String generateBill(CustomerBookHistory foundedCustomer, RoomBookHistory room, StartEndDate startEndDateTime) {
         String context = "Consumer Name: " + foundedCustomer.getConsumer().getName() + " " +
                 "Email : " + foundedCustomer.getConsumer().getEmail() + " " +
@@ -70,5 +128,28 @@ public class Hotel {
                 "Room price: " + room.getRoom().getPrice() + " " +
                 "Time book" + startEndDateTime.toString();
         return context;
+    }
+
+    public void serializeHotel(String filePath) {
+        try (FileOutputStream fileOut = new FileOutputStream(filePath);
+             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+            objectOut.writeObject(this);
+            System.out.println("Hotel object serialized and saved to file: " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Static method to deserialize Hotel object from a file
+    public static Hotel deserializeHotel(String filePath) {
+        try (FileInputStream fileIn = new FileInputStream(filePath);
+             ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+            Hotel hotel = (Hotel) objectIn.readObject();
+            System.out.println("Hotel object deserialized from file: " + filePath);
+            return hotel;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -2,11 +2,12 @@ package org.example.history;
 
 import org.example.room.IRoom;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomBookHistory {
+public class RoomBookHistory implements Serializable {
     private IRoom room;
     private List<StartEndDate> startEndDateTimeList;
 
@@ -22,7 +23,6 @@ public class RoomBookHistory {
     public boolean addBookToHistory(StartEndDate startEndDateTime) {
         if (isOpenForBooking(startEndDateTime)) {
             startEndDateTimeList.add(startEndDateTime);
-            System.out.println("Time fixed");
             return true;
         }
         System.out.println("Artie's busy this Data");
